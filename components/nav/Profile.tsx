@@ -24,6 +24,8 @@ const Profile = () => {
         
     }
 
+    const isAdmin = user?.user_metadata.role === "admin"
+
   return (
     <Popover>
         <PopoverTrigger><Image src={user?.user_metadata.avatar_url} alt={user?.user_metadata.user_name} width={50} height={50} className='rounded-full ring-2 ring-ring' /></PopoverTrigger>
@@ -36,12 +38,15 @@ const Profile = () => {
                     {user?.user_metadata?.email}
                 </p>
             </div>
+            {isAdmin && (
             <Link href="/dashboard" className='block'>
                 <Button variant="ghost" className='w-full flex items-center justify-between'>
                     Dashboard
                     <DashboardIcon/>
                 </Button>
             </Link>
+            )}
+            
             <Link href="/" className='block'>
                 <Button variant="ghost" className='w-full flex items-center justify-between' onClick={handleLogout}>
                     Logout

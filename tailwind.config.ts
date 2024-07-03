@@ -52,11 +52,19 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      backgroundImage: {
+        "gradient-dark":
+          "radial-gradient(76.33% 76.59% at 50.15% 6.06%,#1A1A1A 0%, rgba(26, 26, 26, 0.38) 100%)",
+      },
+      height: {
+        "70vh": "70vh",
       },
       keyframes: {
         "accordion-down": {
