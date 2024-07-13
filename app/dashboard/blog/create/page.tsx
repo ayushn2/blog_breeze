@@ -1,259 +1,47 @@
-"use client"
+"use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import React from 'react'
+import BlogForm from '../../components/BlogForm'
+import { BlogFormSchemaType } from '../../schema';
+import { toast } from '@/components/ui/use-toast';
+import { createBlog } from '@/lib/actions/blog';
+import { useRouter } from 'next/navigation';
 
-import { Button } from "@/components/ui/button"
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { toast } from "@/components/ui/use-toast"
-import { EyeOpenIcon } from "@radix-ui/react-icons"
-import { Switch } from "@/components/ui/switch"
-import { PencilIcon, RocketIcon, StarIcon } from "lucide-react"
-import {BsCopy, BsSave} from "react-icons/bs"
-import { useState } from "react"
-import { cn } from "@/lib/utils"
-import Image from "next/image"
-import { Textarea } from "@/components/ui/textarea"
-import MarkdownPreview from "@/components/markdown/MarkdownPreview"
+const page = () => {
 
-const FormSchema = z.object({
-  title: z.string().min(2, {
-    message: "Title must be at least 2 characters.",
-  }),
-  image_url: z.string().url({
-    message: "Invalid url",
-  })
-    ,
-  content: z.string().min(2, {
-    message: "Content must be at least 2 characters.",
-  }),
-  is_published: z.boolean(),
-  is_premium:z.boolean()
-}).refine((data)=>{
-  const image_url = data.image_url
-  try {
-    // @ts-ignore
-    const url = new url(image_url)
+  const router = useRouter()
 
-    return url.hostname === 'image.unsplash.com'
-  } catch (error) {
-    return false
-  }
-},{message:"Currently we support images only from unsplash"})
+  const onHandleSubmit = async (data:BlogFormSchemaType) =>{
 
-export default function BlogForm() {
+    
 
-  const [isPreview,setIsPreview] = useState(false);
+    const result = await createBlog(data);
+   const {error} = JSON.parse(result);
+    console.log(result)
+    if(error?.message){
+      toast({
+        title: "Failed to create Blog",
+        description: (
+          <pre className="mt-2 w-full rounded-md bg-slate-950 p-4">
+            <code className="text-white">{error.message}</code>
+          </pre>
+        ),
+      })
+    }else{
+      toast({
+        title:"Successfully created " + data.title
+      })
+      router.push("/dashboard")
+    }
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    mode:"all",
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      title: "",
-      content:"",
-      image_url:"",
-      is_premium:false,
-      is_published:true,
-    },
-  })
-
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
+    
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full rounded-md border  space-y-6 pb-10">
-
-        <div className="p-5 flex items-center flex-wrap justify-between border-b gap-5">
-          <div className="flex gap-5 items-center flex-wrap">
-            
-          
-            <span role="button" tabIndex={0} className="flex items-center gap-1 border bg-zinc-700 p-2 rounded-md hover:rind-2 hover:ring-ring transition-all" onClick={() => setIsPreview(!isPreview && !form.getFieldState("image_url").invalid)}>
-              {isPreview ? <>
-              <PencilIcon/>
-              Edit
-              </> :<>
-              <EyeOpenIcon/>
-              Preview
-              </>}
-              
-            </span>
-            
-            <FormField
-            control={form.control}
-            name="is_premium"
-            render={({ field }) => (
-              <FormItem>
-                
-                <FormControl>
-                <div className="flex items-center gap-1 border bg-zinc-700 p-2 rounded-md">
-                      <StarIcon/>
-                      <span>Premium</span>
-                      <Switch 
-                      checked={field.value} 
-                      onCheckedChange={field.onChange}/>
-                  </div>
-                </FormControl>
-                  
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-<FormField
-            control={form.control}
-            name="is_published"
-            render={({ field }) => (
-              <FormItem>
-                
-                <FormControl>
-                <div className="flex items-center gap-1 border bg-zinc-700 p-2 rounded-md">
-                      <RocketIcon/>
-                      <span>Publish</span>
-                      <Switch 
-                      checked={field.value} 
-                      onCheckedChange={field.onChange}/>
-                  </div>
-                </FormControl>
-                  
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          </div>
-          <Button className="flex items-center gap-1" disabled={!form.formState.isValid}> 
-          <BsSave/>      Save
-          </Button>
-        </div>
-
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              
-              <FormControl>
-                <div className={
-                  cn("p-2 w-full flex break-words gap-2",isPreview ? "divide-x-0":"divide-x")}
-                  >
-                    <Input placeholder="title" {...field} className={cn(
-                      "border-none text-lg font-medium leading-relaxed",isPreview?"w-0 p-0":"w-full lg:w-1/2"
-                      )}/>
-                    <div className={cn("lg:px-10",
-                    isPreview 
-                    ? "mx-auto w-full lg-w-4/5"
-                    : "w-1/2 lg:block hidden")}>
-                        <h1 className="text-3xl font-medium">{form.getValues().title}</h1>
-                    </div>
-                </div>
-                
-              </FormControl>
-              
-              {form.getFieldState("title").invalid && form.getValues().title && <div className="p-2"><FormMessage/></div>}
-              
-            </FormItem>
-          )}
-        />
-         <FormField
-          control={form.control}
-          name="image_url"
-          render={({ field }) => (
-            <FormItem>
-              
-              <FormControl>
-                <div className={
-                  cn("p-2 w-full divide-x flex gap-2 items-center",isPreview ? "divide-x-0":"divide-x")}
-                  >
-                    <Input 
-                    placeholder="image url" 
-                    {...field} 
-                    className={cn(
-                      "border-none text-lg font-medium leading-relaxed focused:ring-1 ring-ring",isPreview?"w-0 p-0":"w-full lg:w-1/2"
-                      )}
-                      type="url"/>
-                    <div className={cn("relative",
-                    isPreview 
-                    ? "mx-auto w-full lg-w-4/5"
-                    : "px-10 w-1/2 lg:block hidden")}>
-                       {isPreview? (<>
-                        <div className="relative h-80 mt-5 border rounded-md">
-                            <Image 
-                            src={form.getValues().image_url} alt="preview" 
-                            fill 
-                            className="object-cover object-center rounded-md"
-                            />
-                          </div>
-                       </>) : (
-                         <p className="text-gray-700">
-                          Click on preview to see
-                          </p>
-                       )
-                       }
-                    </div>
-                </div>
-                
-              </FormControl>
-              
-              {form.getFieldState("image_url").invalid && form.getValues().image_url && <div className="p-2">
-                <FormMessage/>
-                </div>}
-              
-            </FormItem>
-          )}
-        />
-          <FormField
-          control={form.control}
-          name="content"
-          render={({ field }) => (
-            <FormItem>
-              
-              <FormControl>
-                <div className={
-                  cn("p-2 w-full flex break-words gap-2",isPreview ? "divide-x-0":"divide-x h-70vh")}
-                  >
-                    <Textarea placeholder="content" {...field} className={cn(
-                      "border-none text-lg font-medium leading-relaxed resize-none h-full",isPreview?"w-0 p-0":"w-full lg:w-1/2"
-                      )}/>
-                    <div className={cn("overflow-y-auto",
-                    isPreview 
-                    ? "mx-auto w-full lg-w-4/5"
-                    : "w-1/2 lg:block hidden")}>
-                       <MarkdownPreview 
-                       content= {form.getValues().content} />
-                           
-                       
-                    </div>
-                </div>
-                
-              </FormControl>
-              
-              {form.getFieldState("title").invalid && form.getValues().content && <div className="p-2"><FormMessage/></div>}
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-       
-      </form>
-    </Form>
+    <div>
+      <BlogForm onHandleSubmit={onHandleSubmit}/>
+    </div>
   )
 }
 
+export default page

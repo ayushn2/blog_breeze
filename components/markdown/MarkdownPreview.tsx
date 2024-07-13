@@ -7,7 +7,7 @@ import { cn
  import "highlight.js/styles/atom-one-dark.min.css";
  import {PiTerminalThin} from "react-icons/pi"
 import CopyButton from './CopyButton';
-import { icons } from 'lucide-react';
+import { icons } from '@/lib/icons';
 
 const MarkdownPreview = ({
     content,
