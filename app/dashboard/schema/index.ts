@@ -5,7 +5,7 @@ export const BlogFormSchema = z
 		title: z.string().min(10, {
 			message: "title is too short",
 		}),
-		content: z.string().min(40, {
+		content: z.string().min(50, {
 			message: "Content is too short",
 		}),
 		image_url: z.string().url({
