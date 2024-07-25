@@ -13,8 +13,13 @@ const page = async () => {
       {blogs?.map((blog,index)=>(
         <Link href={"/blog/"+blog.id} key={index} className='w-full border rounded-md bg-gradient-dark p-5 hover:ring-2 ring-ring transition-all cursor-pointer space-y-5 first:lg:col-span02 first:md:col-span-3'>
             <div className='relative w-full h-72 md:h-64 xl:h-96'>
-              <Image src={blog.image_url} alt="cover" fill className='object-cover object-center'
+              <Image 
+              src={blog.image_url} 
+              alt="cover" 
+              fill 
+              className='object-cover object-center'
               sizes='(max-width:768px) 100vw, (max-width: 1200px): 50vw, 33vw'
+              priority
               />
             </div>
             <div className='space-y-2'>
@@ -25,7 +30,7 @@ const page = async () => {
             </div>
         </Link>
       ))}
-  
+    
     </div>
   )
 }

@@ -60,6 +60,7 @@ const DASHBOARD = "/dashboard"
 
     const result = await supabase.from("blog").delete().eq("id",blogId);
     revalidatePath(DASHBOARD)
+    revalidatePath("/blog/" + blogId);
     return JSON.stringify(result)
   }
 
@@ -69,6 +70,7 @@ const DASHBOARD = "/dashboard"
 
     const result = await supabase.from("blog").update(data).eq("id",blogId);
     revalidatePath(DASHBOARD)
+    revalidatePath("/blog/"+blogId)
     
     return JSON.stringify(result)
   }
@@ -102,7 +104,7 @@ const DASHBOARD = "/dashboard"
         .update({content:data.content})
         .eq("blog_id",blogId);
         revalidatePath(DASHBOARD)
-       
+       revalidatePath("/blog/" + blogId)
     
     return JSON.stringify(result)
     }
