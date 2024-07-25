@@ -3,7 +3,7 @@ import { EyeOpenIcon } from '@radix-ui/react-icons'
 import { PencilIcon, Trash2Icon } from 'lucide-react'
 import React from 'react'
 import { Switch } from '@/components/ui/switch'
-import { readBlog, updateBlogById } from '@/lib/actions/blog'
+import { readBlogAdmin, updateBlogById } from '@/lib/actions/blog'
 import DeleteAlert from './DeleteAlert'
 import SwitchForm from './SwitchForm'
 import { BlogFormSchemaType } from '../schema'
@@ -11,13 +11,13 @@ import Link from 'next/link'
 
 const BlogTable = async () => {
 
-  const {data :blogs} = await readBlog()
+  const {data :blogs} = await readBlogAdmin()
 
   return (
     <div className='overflow-x-auto'>
 
   
-    <div className='border bg-gradient-dark rounded-md w-[900px] md:w-full'>
+    <div className='border bg-gradient-dark rounded-md sm:w-[900px] md:w-full'>
       <div className='grid grid-cols-5 p-5 text-accent border-b'>
         <h1 className='col-span-2'>Title</h1>
         <h1>Premium</h1>
