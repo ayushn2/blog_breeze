@@ -6,6 +6,7 @@ import { createBrowserClient } from '@supabase/ssr'
 import React, { useEffect, useState } from 'react'
 import Markdown from 'react-markdown'
 import BlogLoading from './BlogLoading'
+import Checkout from '@/components/stripe/Checkout'
 
 const BlogContent = ({blogId}:{blogId:string}) => {
 
@@ -34,6 +35,10 @@ const BlogContent = ({blogId}:{blogId:string}) => {
 
     if(isLoading){
         return <BlogLoading/>
+    }
+
+    if(!blog?.content){
+        return <Checkout/>
     }
 
   return (
