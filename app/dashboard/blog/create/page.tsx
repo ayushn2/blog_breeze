@@ -7,7 +7,7 @@ import { toast } from '@/components/ui/use-toast';
 import { createBlog } from '@/lib/actions/blog';
 import { useRouter } from 'next/navigation';
 
-const page = () => {
+const Page = () => {
 
   const router = useRouter()
 
@@ -44,4 +44,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page
