@@ -35,7 +35,7 @@ const BlogTable = async () => {
           is_published: !blog.is_published
         } as BlogFormSchemaType)
         return(
-            <div className='grid grid-cols-5 p-5'>
+            <div className='grid grid-cols-5 p-5' key={index}>
               <h1 className='col-span-2'>{blog.title}</h1>
               <SwitchForm 
               checked={blog.is_premium} 
