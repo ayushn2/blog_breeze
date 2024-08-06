@@ -56,24 +56,22 @@ export async function middleware(request: NextRequest) {
 		}
 	);
 
-	
+	await supabase.auth.getSession();
 
 	const { data } = await supabase.auth.getSession();
 
-	if(data.session){
-		if(data.session.user.user_metadata.role !== "admin"){
-			return NextResponse.redirect(new URL("/",request.url));
+	if (data.session) {
+		if (
+			// protect this page only admin can access this /dashboard/members
+			data.session.user.user_metadata.role !== "admin"
+		) {
+			return NextResponse.redirect(new URL("/", request.url));
 		}
-	}else{
-		return NextResponse.redirect(new URL("/",request.url));
+	} else {
+		return NextResponse.redirect(new URL("/", request.url));
 	}
-
-	return response;
-
-	
 }
 
 export const config = {
-	matcher:["/dashboard/:path*"]//this means everytime we go to the dashboard page middleware will run
-}
-
+	matcher: ["/dashboard/:path*"],
+};

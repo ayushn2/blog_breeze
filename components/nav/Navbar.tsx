@@ -1,30 +1,22 @@
 "use client";
+import React from "react";
+import HoverUnderLine from "./HoverUnderLine";
+import Link from "next/link";
+import LoginForm from "./LoginForm";
+import { useUser } from "@/lib/store/user";
+import Profile from "./Profile";
 
-import Link from 'next/link'
-import React from 'react'
-import { Button } from '../ui/button'
-import { SiGithub } from 'react-icons/si'
-import LoginForm from './LoginForm'
-import { useUser } from '@/lib/store/user'
-import Profile from './Profile';
+export default function Navbar() {
+	const user = useUser((state) => state.user);
 
-const Navbar = () => {
-
-    const user = useUser((state) => state.user);
-
-  return (
-    <nav className='flex items-center justify-between'>
-      
-        <div className='group'>
-        <Link href="/" className='text-2xl font-bold'>Blog Breeze</Link>
-            <div className='h-1 w-0 group-hover:w-[60%] transition-all bg-primary'></div>
-        </div>
-        {user?.id ? <Profile/>:<LoginForm/>}
-        
-      
-    </nav>
-  )
+	return (
+		<nav className="w-full justify-between items-center flex p-5 xl:p-0">
+			<HoverUnderLine>
+				<Link href={"/"} className="font-bold text-2xl">
+					Blog Breeze
+				</Link>
+			</HoverUnderLine>
+			{user ? <Profile /> : <LoginForm />}
+		</nav>
+	);
 }
-
-export default Navbar
-

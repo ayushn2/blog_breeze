@@ -1,56 +1,66 @@
-import React, { useTransition } from 'react'
-import { Button } from '../ui/button'
-import { LightningBoltIcon } from '@radix-ui/react-icons'
-import { useUser } from '@/lib/store/user'
-import LoginForm from '../nav/LoginForm'
-import { useParams, usePathname } from 'next/navigation'
-import { checkout } from '@/lib/actions/stripe'
-import { cn } from '@/lib/utils'
-import {loadStripe} from "@stripe/stripe-js"
-import stripe from 'stripe'
+"use client";
+import React, { ChangeEvent, useTransition } from "react";
+import { LightningBoltIcon } from "@radix-ui/react-icons";
+import { useUser } from "@/lib/store/user";
+import { cn } from "@/lib/utils";
+import { loadStripe } from "@stripe/stripe-js";
+import { checkout } from "@/lib/actions/stripe";
+import { usePathname } from "next/navigation";
+import LoginForm from "../nav/LoginForm";
+export default function Checkout() {
+	const pathname = usePathname();
 
-const Checkout = () => {
+	const [isPending, startTransition] = useTransition();
 
-    const pathname = usePathname()
-    const [isPending,startTransition] = useTransition()
+	const user = useUser((state) => state.user);
 
-    const user = useUser((state)=>state.user)
+	const handleCheckOut = (e: ChangeEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		startTransition(async () => {
+			const data = JSON.parse(
+				await checkout(user?.email!, location.origin + pathname)
+			);
+			const result = await loadStripe(
+				process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!
+			);
+			await result?.redirectToCheckout({ sessionId: data.id });
+		});
+	};
 
-    const handleCheckout =  (e:any) =>{
-        e.preventDefault()
-        startTransition( async ()=>{
-            const data = JSON.parse(
-                await checkout(user?.user_metadata?.email!,location.origin + pathname)
-            )
+	if (!user) {
+		return (
+			<div className="flex items-center justify-center h-96 gap-2">
+				<LoginForm /> to continue
+			</div>
+		);
+	}
 
-            const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!)
-            await stripe?.redirectToCheckout({sessionId : data.id})
-            
-        })
-        
-    }
-
-    if(!user?.id){
-        return(
-            <div className='flex items-center h-96 w-full justify-center gap-4'>
-                    <LoginForm/> to read
-            </div>
-        ) 
-    }
-
-  return (
-    <form className={cn('h-96 w-full flex items-center justify-center',{"animate-pulse":isPending})} onSubmit={handleCheckout}>
-        <Button variant="ghost" className='flex flex-col p-12 gap-5 ring-2 ring-primary'>
-            <span className='flex items-center gap-3 text-2xl font-bold text-primary'>
-                <LightningBoltIcon className={cn('w-5 h-5',!isPending?"animate-bounce":"animate-spin")}/>
-                    Upgrade to Pro
-            </span>
-            <span className='felx items-center justify-center'>
-                <p className='text-secondary-foreground'>Unlock all blog contents</p>
-            </span>
-        </Button>
-    </form>
-  )
+	return (
+		<form
+			onSubmit={handleCheckOut}
+			className={cn(
+				"flex items-center  w-full justify-center h-96 ",
+				{ hidden: !user?.id },
+				{ " animate-pulse": isPending }
+			)}
+		>
+			<button
+				className="ring-1 ring-green-500 p-10 rounded-md text-center"
+				type="submit"
+			>
+				<h1 className="uppercase  font-bold text-2xl text-green-500 flex items-center gap-2">
+					<LightningBoltIcon
+						className={cn(
+							" animate-bounce w-5 h-5",
+							!isPending ? "animate-bounce" : "animate-spin"
+						)}
+					/>
+					Upgrade to pro
+				</h1>
+				<p className="text-sm text-gray-500">
+					Unlock all Daily blog contents
+				</p>
+			</button>
+		</form>
+	);
 }
-
-export default Checkout

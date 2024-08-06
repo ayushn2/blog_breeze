@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import { headers } from "next/headers";
-import { createSupabaseAdmin } from "@/lib/supabase";
+import { createSupbaseAdmin } from "@/lib/supabase";
 import { buffer } from "node:stream/consumers";
 
 const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET!;
@@ -24,7 +24,7 @@ export async function POST(req: any) {
 		switch (event.type) {
 			case "customer.subscription.deleted":
 				const deleteSubscription = event.data.object;
-				await onCancelSubscription(
+				await onCacnelSubscription(
 					deleteSubscription.status === "active",
 					deleteSubscription.id
 				);
@@ -58,7 +58,7 @@ const onSuccessSubscription = async (
 	status: boolean,
 	email: string
 ) => {
-	const supabase = await createSupabaseAdmin();
+	const supabase = await createSupbaseAdmin();
 	const { data } = await supabase
 		.from("users")
 		.update({
@@ -74,11 +74,11 @@ const onSuccessSubscription = async (
 	});
 };
 
-const onCancelSubscription = async (
+const onCacnelSubscription = async (
 	status: boolean,
 	subscription_id: string
 ) => {
-	const supabase = await createSupabaseAdmin();
+	const supabase = await createSupbaseAdmin();
 	const { data, error } = await supabase
 		.from("users")
 		.update({

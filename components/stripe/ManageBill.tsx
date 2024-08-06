@@ -1,21 +1,18 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { manageBilling } from "@/lib/actions/stripe";
+import { manageBillingPortal } from "@/lib/actions/stripe";
 import { cn } from "@/lib/utils";
 import { BackpackIcon } from "@radix-ui/react-icons";
 import React, { ChangeEvent, useTransition } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { useRouter } from "next/navigation";
 
-
-export default function ManageBilling({ customerId }: { customerId: string }) {
-    const router = useRouter();
+export default function ManageBill({ customerId }: { customerId: string }) {
 	const [isPending, startTransition] = useTransition();
 	const onSubmit = (e: ChangeEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		startTransition(async () => {
-			const data = JSON.parse(await manageBilling(customerId));
-			router.push(data.url)
+			const data = JSON.parse(await manageBillingPortal(customerId));
+			window.location.href = data.url;
 		});
 	};
 

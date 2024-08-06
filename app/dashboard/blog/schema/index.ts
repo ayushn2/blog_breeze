@@ -19,7 +19,7 @@ export const BlogFormSchema = z
 			const image_url = data.image_url;
 			try {
 				const url = new URL(image_url);
-				return url.hostname === "unsplash.com";
+				return url.hostname === "images.unsplash.com";
 			} catch {
 				return false;
 			}

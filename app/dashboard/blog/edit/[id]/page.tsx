@@ -1,16 +1,9 @@
-import { readBlogContentById } from '@/lib/actions/blog'
-import React from 'react'
-import EditForm from './components/EditForm'
+import React from "react";
+import EditForm from "./components/EditForm";
+import { IBlogDetial } from "@/lib/types";
+import { readBlogDeatailById } from "@/lib/actions/blog";
 
-const page = async ({params}:{params:{id:string}}) => {
-
-  const { data: blog} = await readBlogContentById(params.id)
-
-  
-
-  return (
-    <EditForm blog={blog}/>
-  )
+export default async function Edit({ params }: { params: { id: string } }) {
+	const { data: blog } = await readBlogDeatailById(params.id);
+	return <EditForm blog={blog as IBlogDetial} />;
 }
-
-export default page

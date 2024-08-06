@@ -1,42 +1,42 @@
 "use client";
+import { cn } from "@/lib/utils";
+import { PersonIcon, ReaderIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React from "react";
 
-import {PersonIcon, ReaderIcon} from "@radix-ui/react-icons"
-import Link from 'next/link'
-import { cn } from '@/lib/utils'
-import { usePathname } from 'next/navigation'
+export default function NavLinks() {
+	const pathname = usePathname();
+	const links = [
+		{
+			href: "/dashboard",
+			Icon: ReaderIcon,
+			text: "dashboard",
+		},
 
-const Navlinks = () => {
+		{
+			href: "/dashboard/user",
+			Icon: PersonIcon,
+			text: "users",
+		},
+	];
 
-    const pathname= usePathname()
-
-    const links = [
-        {
-        href:"/dashboard",
-        text:"dashboard",
-        icon:ReaderIcon,
-    },{
-        href:"/dashboard/user",
-        text:"user",
-        icon:PersonIcon,
-    }
-]
-
-  return (
-    <div className='flex items-center gap-5'>
-      {links.map((link,index)=>{
-        return <Link 
-        href={link.href} 
-        key={index} 
-        className={cn("flex items-center gap-1 hover:underline transition-all",
-        {"text-primary underline":pathname === link.href}
-        )
-            
-        }>
-            <link.icon/>{link.text}
-        </Link>
-      })}
-    </div>
-  )
+	return (
+		<div className="flex items-center gap-5 border-b pb-2">
+			{links.map(({ href, Icon, text }, index) => {
+				return (
+					<Link
+						href={href}
+						className={cn(
+							"text-sm text-gray-400 flex  items-center gap-1 hover:underline transition-all",
+							{ "text-secondary underline": pathname === href }
+						)}
+						key={index}
+					>
+						<Icon /> / {text}
+					</Link>
+				);
+			})}
+		</div>
+	);
 }
-
-export default Navlinks

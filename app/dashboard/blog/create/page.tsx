@@ -1,47 +1,43 @@
 "use client";
+import React from "react";
 
-import React from 'react'
-import BlogForm from '../../components/BlogForm'
-import { BlogFormSchemaType } from '../../schema';
-import { toast } from '@/components/ui/use-toast';
-import { createBlog } from '@/lib/actions/blog';
-import { useRouter } from 'next/navigation';
+import { toast } from "@/components/ui/use-toast";
+import { defaultCreateBlog } from "@/lib/data";
+import { PostgrestSingleResponse } from "@supabase/supabase-js";
+import BlogForm from "../components/BlogForm";
+import { createBlog } from "../../../../lib/actions/blog";
+import { BlogFormSchemaType } from "../schema";
+import { useRouter } from "next/navigation";
 
-const Page = () => {
+export default function CreateForm() {
+	const router = useRouter();
 
-  const router = useRouter()
+	const onHandleSubmit = async (data: BlogFormSchemaType) => {
+		const result = JSON.parse(await createBlog(data));
 
-  const onHandleSubmit = async (data:BlogFormSchemaType) =>{
+		const { error } = result as PostgrestSingleResponse<null>;
+		if (error?.message) {
+			toast({
+				title: "Fail to create a post 😢",
+				description: (
+					<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+						<code className="text-white">{error.message}</code>
+					</pre>
+				),
+			});
+		} else {
+			toast({
+				title: "Successfully create a post 🎉",
+				description: data.title,
+			});
+			router.push("/dashboard");
+		}
+	};
 
-    
-
-    const result = await createBlog(data);
-   const {error} = JSON.parse(result);
-    console.log(result)
-    if(error?.message){
-      toast({
-        title: "Failed to create Blog",
-        description: (
-          <pre className="mt-2 w-full rounded-md bg-slate-950 p-4">
-            <code className="text-white">{error.message}</code>
-          </pre>
-        ),
-      })
-    }else{
-      toast({
-        title:"Successfully created " + data.title
-      })
-      router.push("/dashboard")
-    }
-
-    
-  }
-
-  return (
-    <div>
-      <BlogForm onHandleSubmit={onHandleSubmit}/>
-    </div>
-  )
+	return (
+		<BlogForm
+			onHandleSubmit={onHandleSubmit}
+			defaultBlog={defaultCreateBlog}
+		/>
+	);
 }
-
-export default Page
