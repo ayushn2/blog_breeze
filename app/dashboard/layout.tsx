@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import React, { ReactNode } from "react";
-import NavLinks from "./components/NavLinks";
+import NavLinks from "./components/Navlinks";
 
 export const metadata: Metadata = {
 	metadataBase: new URL("https://dailyblog-demo.vercel.app/"),
