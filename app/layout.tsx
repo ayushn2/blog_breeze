@@ -42,7 +42,7 @@ export default function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body
-				className={cn("antialiased dark:bg-[#09090B]", inter.className)}
+				className={cn("antialiased dark:bg-background]", inter.className)}
 			>
 				<ThemeProvider
 					attribute="class"
@@ -50,7 +50,7 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<main className="max-w-7xl mx-auto lg:py-10 space-y-10 p-5 lg:p-0">
+					<main className="w-[80%] mx-auto lg:py-10 space-y-10 p-5 lg:p-0">
 						<Navbar />
 						{children}
 					</main>

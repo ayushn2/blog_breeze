@@ -25,7 +25,7 @@ export default async function page() {
 								<div className="flex items-center gap-2 font-medium">
 									<Image
 										src={user.image_url}
-										className="rounded-full ring-green-500 ring-1"
+										className="rounded-full ring-ring-500 ring-1"
 										width={50}
 										height={50}
 										alt={user.display_name}
@@ -54,7 +54,7 @@ const SubscriptionStatus = ({ status }: { status: boolean }) => {
 				className={cn(
 					" dark:bg-zinc-800 px-2 py-1 rounded-full shadow capitalize  border-[.5px] text-sm",
 					status
-						? "border-green-500 text-green-600 bg-green-200"
+						? "border-ring text-secondary bg-background"
 						: "border-zinc-300 dark:text-red-400 dark:border-yellow-700 px-4 bg-red-50"
 				)}
 			>

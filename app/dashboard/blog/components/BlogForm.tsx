@@ -25,9 +25,10 @@ import {
 } from "@radix-ui/react-icons";
 import { ReactNode, useState, useTransition } from "react";
 import { IBlogDetial, IBlogForm } from "@/lib/types";
-import { Switch } from "@/components/ui/switch";
+
 import { BsSave } from "react-icons/bs";
 import { BlogFormSchema, BlogFormSchemaType } from "../schema";
+import { Switch } from "@/components/ui/switch";
 
 export default function BlogForm({
 	onHandleSubmit,
