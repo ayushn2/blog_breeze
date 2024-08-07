@@ -25,7 +25,7 @@ export default function Profile() {
 		setUser(null);
 	};
 	const isAdmin = user?.role === "admin";
-	const isSub = user?.stripe_customer_id;
+	
 
 	return (
 		<Popover>
@@ -43,9 +43,7 @@ export default function Profile() {
 					<p className="text-sm">{user?.display_name}</p>
 					<p className="text-sm text-gray-500">{user?.email}</p>
 				</div>
-				{!isAdmin && isSub && (
-					<ManageBill customerId={user?.stripe_customer_id!} />
-				)}
+				
 
 				{isAdmin && (
 					<Link href="/dashboard">
